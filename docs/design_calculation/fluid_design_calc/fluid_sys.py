@@ -1,0 +1,1 @@
+# füge hier die Tankgrößen, Flowrates etc. ein und berechne Pumpleistungen, Füllzeit etc. 
