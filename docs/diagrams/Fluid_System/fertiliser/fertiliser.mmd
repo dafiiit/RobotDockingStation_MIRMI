@@ -1,0 +1,45 @@
+%%```mermaid
+graph LR
+    %% === Styles ===
+    %% TUM Farben und modernes Design für alle Diagramme
+    %% --- BASIS-STYLES ---
+    classDef tumBlue fill:#0065BD,stroke:#003359,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+    classDef tumLightBlue fill:#64A0C8,stroke:#003359,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+    classDef tumOrange fill:#E87722,stroke:#B85A1A,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+    classDef tumGreen fill:#A2AD00,stroke:#7A8500,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+
+    %% --- SUBGRAPH-STYLES ---
+    %% 4. Namen für Subgraph Styles hinzugefügt
+
+    style Robot fill:#F8FBFF,stroke:#0065BD,stroke-width:3px,rx:20,ry:20,color:#000000,font-size:16px,font-weight:bold;
+
+    style Docking_Station fill:#F2FAF9,stroke:#64A0C8,stroke-width:3px,rx:20,ry:20,color:#000000,font-size:16px,font-weight:bold;
+
+    %% Alle Verbindungen einheitlich stylen
+    linkStyle default stroke:#0065BD,stroke-width:2px;
+
+    %% Diagramm Definition
+    subgraph Docking_Station
+        WT1(Fertiliser Tank) -- ¾inch → tube --> P1(Pump)
+        P1 -- tube → ¾ --> V(Valve 1)
+
+    end
+
+    subgraph Robot
+        V3(Valve 2) --> WT2
+        WT2(Fertiliser Tank) --> P2(Pump)
+        P2 --> V4(Valve 3)
+    end
+        
+    V -- "¾ → tube" --> V3
+
+    %% Illustriert den Exit aus dem externen System
+
+    OUT([ ])
+        style OUT fill:none, stroke:none
+        V4 -- Exit --> OUT
+    
+
+    %% Zuweisung der Style-Klassen
+    class WT1,P1,C1,C2,TWS,WP,EC,V,C3,WT2,P2,V2,V3,V4 tumBlue;
+ %%```

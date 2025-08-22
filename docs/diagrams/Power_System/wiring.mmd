@@ -1,0 +1,88 @@
+%%```mermaid
+graph LR
+    %% === Styles ===
+    %% --- BASIS-STYLES ---
+    classDef tumBlue fill:#0065BD,stroke:#003359,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+
+    classDef tumLightBlue fill:#64A0C8,stroke:#003359,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+
+    classDef tumOrange fill:#E87722,stroke:#B85A1A,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+
+    classDef tumGreen fill:#A2AD00,stroke:#7A8500,stroke-width:2px,color:#ffffff,rx:12,ry:12,font-size:14px,font-weight:bold;
+
+    %% --- SUBGRAPH-STYLES ---
+    style Robot fill:#F8FBFF,stroke:#0065BD,stroke-width:3px,rx:20,ry:20,color:#000000,font-size:16px,font-weight:bold;
+
+    style Docking_Station fill:#F2FAF9,stroke:#64A0C8,stroke-width:3px,rx:20,ry:20,color:#000000,font-size:16px,font-weight:bold;
+
+    %% Alle Verbindungen einheitlich stylen
+    linkStyle default stroke:#0065BD,stroke-width:2px;
+
+    subgraph Docking_Station
+        dji --- usb_b_2(USB B 2)
+        usb_b_2:::tumOrange
+        dji --- usb_c_1(USB C 1)
+        usb_c_1:::tumOrange
+        dji --- usb_c_2(USB C 2)
+        usb_c_2:::tumOrange
+        dji --- usb_b_1(USB B 1)
+        usb_b_1:::tumOrange
+        dji --- ac_1(AC-Outlet 1)
+        ac_1:::tumOrange
+        dji --- ac_2(AC-Outlet 2)
+        ac_2:::tumOrange
+
+        dji(DJI Power 1000) --- sdc(SDC 12V)
+        dji:::tumBlue
+        subgraph "12V Circuit"
+            sdc:::tumOrange
+            sdc --- LA[Linear Actuators x 4]
+            sdc --- FP_D[Fluid Pumps x 2]
+            sdc --- FV_D[Fluid Valves x3]
+        end
+
+        dji(DJI Power 1000) --- sdc_lite(SDC Lite 9V)
+        sdc_lite:::tumOrange
+        subgraph "3.3V Circuit"
+            sdc_lite --- PS3.3V_D
+            PS3.3V_D[ DC-DC Converter: 9→3.3V]:::tumLightBlue
+            PS3.3V_D --- ESP_D(ESP32 x3)
+        end
+        
+        ac_1 --- WR[Wi-Fi Router]
+        
+        usb_b_1 --- RPi_D[Raspberry Pi 4B/5]
+
+        ac_2 --- GE[GPS-Emitter]
+
+    end
+
+    subgraph Robot
+        battery(Husky Battery) --- PS12V_R
+        battery:::tumBlue
+
+        subgraph "12V Circuit"
+            PS12V_R[Power Pin: 12V]:::tumOrange
+            PS12V_R --- LIDAR[LIDAR Sensor]
+            PS12V_R --- FP_R[Fluid Pumps x2]
+            PS12V_R --- FV_R[Fluid Valves x4]
+        end
+        subgraph "5V Circuit"
+            PS12V_R --- PS5V_R
+            PS5V_R[DC-DC Converter: 12→5V]:::tumLightBlue
+            PS5V_R --- RPi_R[Raspberry Pi 4B/5]
+            PS5V_R --- ESP_R[ESP32 Microcontrollers x5]
+            PS5V_R --- IR_Cam[IR-Camera]
+            PS5V_R --- Cam[Camera]
+        end
+        subgraph "3.3V Circuit"
+            PS12V_R --- PS3.3V_R
+            PS3.3V_R[DC-DC Converter: 12→3.3V]:::tumLightBlue
+            PS3.3V_R --- IR_LEDs[IR-LEDs]
+            PS3.3V_R --- GPS_R[GPS Receiver]
+        end
+    end 
+    battery---connector
+    connector---dji
+    connector:::tumOrange
+%%```
