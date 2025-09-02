@@ -1,10 +1,10 @@
+%%```mermaid
 graph LR
 
   %% === ROBOTER ===
   subgraph Robot
     PiR(Raspberry Pi):::tumBlue
     WiFiR(WiFi + 5G Router)
-    TailscaleR(Tailscale VPN Client)
     Switch(Ethernet Switch)
 
     %% Sensor-ESPs
@@ -24,27 +24,26 @@ graph LR
     Pump2(Pump 2)
 
     %% Verbindungen intern
-    PiR --> WiFiR --> TailscaleR
-    PiR -->|ROS2| Switch
-    Switch --> ESP_Cam
-    Switch --> ESP_IR
-    Switch --> ESP_LIDAR
-    Switch --> ESP_GPSR
-    Switch --> ESP_FlowPump
+    Switch ---|Ethernet| WiFiR 
+    PiR ---|Ethernet| Switch
+    Switch ---|Ethernet| ESP_Cam
+    Switch ---|Ethernet| ESP_IR
+    Switch ---|Ethernet| ESP_LIDAR
+    Switch ---|Ethernet| ESP_GPSR
+    Switch ---|Ethernet| ESP_FlowPump
 
-    ESP_Cam --> Cam
-    ESP_IR --> IR
-    ESP_LIDAR --> LIDAR
-    ESP_GPSR --> GPSR
-    ESP_FlowPump --> Flow
-    ESP_FlowPump --> Pump1 & Pump2
+    ESP_Cam --- Cam
+    ESP_IR --- IR
+    ESP_LIDAR --- LIDAR
+    ESP_GPSR --- GPSR
+    ESP_FlowPump --- Flow
+    ESP_FlowPump --- Pump1 & Pump2
   end
 
   %% === DOCKINGSTATION ===
   subgraph Docking_Station
     PiD(Raspberry Pi):::tumBlue
-    WiFiD(WiFi Router / Hotspot)
-    TailscaleD(Tailscale VPN Client)
+    SwitchDock(Ethernet Switch)
 
     %% ESP-Controller nach Gruppen
     ESP_Actuator[ESP - 4x Linear Actuators]
@@ -67,19 +66,19 @@ graph LR
     GPS_Tx(GPS Emitter)
 
     %% Verbindungen Dock
-    PiD --> WiFiD --> ESP_Signal
-    WiFiD --> ESP_Actuator
-    WiFiD --> ESP_Fluid
-    WiFiD --> TailscaleD 
+    PiD ---|Ethernet| SwitchDock ---|Ethernet| ESP_Signal
+    SwitchDock --- |Ethernet| ESP_Actuator
+    SwitchDock --- |Ethernet| ESP_Fluid
+    SwitchDock --- |Ethernet| WiFiD(WiFi + 5G Router)
 
-    ESP_Actuator --> LA1 & LA2 & LA3 & LA4
-    ESP_Fluid --> DPump1 & DPump2 & Valve1 & Valve2 & Valve3
-    ESP_Signal --> IRLED & GPS_Tx
+    ESP_Actuator --- LA1 & LA2 & LA3 & LA4
+    ESP_Fluid --- DPump1 & DPump2 & Valve1 & Valve2 & Valve3
+    ESP_Signal --- IRLED & GPS_Tx
   end
 
   %% === ROS2 Netzwerkkommunikation ===
-  TailscaleR -->|ROS2 Topics / Services| TailscaleD
-  %%PiR -->|ROS2 Nodes| PiD
+  WiFiR ---|Tailscale_VPN_Client| cloud
+  cloud---|Tailscale_VPN_Client| WiFiD
   
     %% === Styles ===
     %% TUM Farben und modernes Design für alle Diagramme
@@ -99,3 +98,4 @@ graph LR
 
     %% Alle Verbindungen einheitlich stylen
     linkStyle default stroke:#0065BD,stroke-width:2px;
+%%```
